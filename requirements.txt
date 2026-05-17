@@ -1,0 +1,4 @@
+modal==0.62.45
+chess==1.11.2
+transformers
+torch
