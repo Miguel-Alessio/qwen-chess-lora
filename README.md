@@ -37,7 +37,6 @@ To test the model via the Modal cloud:
 1. Install local dependencies:
    `pip install -r requirements.txt`
 2. Run the interaction script:
-   `modal run scripts/joaca_sah.py`
-Note for Linux users: 
-    If you encounter an externally-managed-environment error, it is recommended to use a virtual environment (python -m venv .venv). Alternatively, for a quick test, 
-    you can bypass the restriction by appending the override flag: pip install -r requirements.txt --break-system-packages
+   `modal run scripts/play_chess.py`
+## If you encounter an externally-managed-environment error, it is recommended to use a virtual environment (python -m venv .venv). Alternatively, for a quick test, 
+   you can bypass the restriction by appending the override flag: pip install -r requirements.txt --break-system-packages
