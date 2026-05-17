@@ -38,4 +38,5 @@ To test the model via the Modal cloud:
    `pip install -r requirements.txt`
 2. Run the interaction script:
    `modal run scripts/play_chess.py`
-### If you encounter an externally-managed-environment error, it is recommended to use a virtual environment (python -m venv .venv). Alternatively, for a quick test, you can bypass the restriction by appending the override flag: pip install -r requirements.txt --break-system-packages
+3. If you encounter an externally-managed-environment error, it is recommended to use a virtual environment (python -m venv .venv). 
+   Alternatively, for a quick test, you can bypass the restriction by appending the override flag: pip install -r requirements.txt --break-system-packages
