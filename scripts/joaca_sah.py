@@ -1,9 +1,12 @@
 import modal
 
-# Definim mediul din cloud cu librăriile necesare
+# Definim mediul din cloud și BĂGĂM MODELUL DIRECT ÎN MEMORIA LUI (Cache)
 image = (
     modal.Image.debian_slim(python_version="3.11")
-    .pip_install("transformers", "torch", "accelerate", "chess")
+    .pip_install("transformers", "torch", "accelerate", "chess", "huggingface_hub")
+    # Această comandă descarcă modelul o singură dată când se construiește containerul!
+ 
+   .run_commands("huggingface-cli download Miguel-Alessio/qwen-7b-chess-master")
 )
 
 app = modal.App("sah-interactiv")
