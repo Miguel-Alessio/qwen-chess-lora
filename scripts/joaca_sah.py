@@ -58,53 +58,51 @@ class ChessPlayer:
 @app.local_entrypoint()
 def main():
     import chess
+    player = ChessPlayer() # Conexiunea la cloud rămâne deschisă aici!
     
-    board = chess.Board()
-    player = ChessPlayer()
-    
-    print("\n=========================================")
-    print("♟️  BĂTĂLIA CU AI-UL QWEN-7B  ♟️")
-    print("=========================================")
-    print("Tu joci cu Albele. Introdu mutările în format SAN (ex: e4, Nf3).")
-    print("Scrie 'exit' pentru a te da bătut.\n")
-    
-    istoric = ""
-    
-    while not board.is_game_over():
-        # Rândul tău
-        mutare_om = input("Mutarea ta (Alb): ")
-        if mutare_om.lower() == 'exit':
-            print("Ai părăsit jocul.")
+    while True: # <--- Adăugăm bucla asta mare care ține jocul viu
+        board = chess.Board()
+        istoric = ""
+        
+        print("\n=========================================")
+        print("♟️  BĂTĂLIA CU AI-UL QWEN-7B (Meci Nou)  ♟️")
+        print("=========================================")
+        print("Scrie 'exit' pentru a închide de tot scriptul.\n")
+        
+        while not board.is_game_over():
+            mutare_om = input("Mutarea ta (Alb): ")
+            
+            if mutare_om.lower() == 'exit':
+                print("Ai părăsit jocul definitiv.")
+                return # Ieșim din program de tot
+                
+            try:
+                board.push_san(mutare_om)
+                istoric += mutare_om + " "
+            except ValueError:
+                print("❌ Mutare invalidă. Încearcă din nou.")
+                continue
+                
+            print("🤖 AI-ul gândește...")
+            mutare_ai = player.genereaza_mutare.remote(istoric)
+            
+            try:
+                board.push_san(mutare_ai)
+                istoric += mutare_ai + " "
+                print(f"👉 AI-ul a mutat (Negru): {mutare_ai}")
+            except ValueError:
+                print(f"🤯 AI-ul a halucinat o mutare ilegală ('{mutare_ai}').")
+                print("Sistem: Ștergem ultima mutare ca să îl deblocăm.")
+                istoric = istoric[:-len(mutare_om)-1]
+                board.pop()
+                continue
+                
+            print("\n" + str(board) + "\n")
+            print("-" * 40)
+            
+        print("\n🏁 Jocul s-a terminat! Rezultat:", board.result())
+        
+        # Meciul s-a terminat, dar noi NU închidem scriptul. Întrebăm de o revanșă:
+        raspuns = input("\nVrei să joci din nou? (da/nu): ")
+        if raspuns.lower() != 'da':
             break
-            
-        try:
-            # Validăm și aplicăm mutarea ta pe tablă
-            board.push_san(mutare_om)
-            istoric += mutare_om + " "
-        except ValueError:
-            print("❌ Mutare invalidă sau format greșit! Încearcă din nou (ex: e4, Nf3).")
-            continue
-            
-        print("🤖 AI-ul gândește...")
-        
-        # Rândul AI-ului (trimitem comanda în cloud)
-        mutare_ai = player.genereaza_mutare.remote(istoric)
-        
-        try:
-            # Validăm mutarea AI-ului
-            board.push_san(mutare_ai)
-            istoric += mutare_ai + " "
-            print(f"👉 AI-ul a mutat (Negru): {mutare_ai}")
-        except ValueError:
-            print(f"🤯 AI-ul a încercat o mutare ilegală ('{mutare_ai}'). Ai câștigat tehnic!")
-            print("Sistem: Ștergem ultima mutare și te lăsăm să joci tu altceva pentru a-l debloca.")
-            istoric = istoric[:-len(mutare_om)-1] # ștergem ultima ta mutare din istoric
-            board.pop() # dăm înapoi tabla
-            continue # Nu mai dăm break! Jocul continuă.
-            
-        # Afișăm tabla în consolă
-        print("\n" + str(board) + "\n")
-        print("-" * 40)
-        
-    print("\n🏁 Jocul s-a terminat!")
-    print("Rezultat (1-0 Alb, 0-1 Negru, 1/2 Remiză):", board.result())
