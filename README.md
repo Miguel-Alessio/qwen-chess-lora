@@ -8,7 +8,7 @@ The project was developed using the **Surogate** framework and trained on the **
 Due to its large size (approx. 15 GB), the merged model weights (LoRA + Base) are hosted on the Hugging Face Hub:
 **[Miguel-Alessio/qwen-7b-chess-master](https://huggingface.co/Miguel-Alessio/qwen-7b-chess-master)**
 
-## 📊 Training Details & Metrics
+## Training Details & Metrics
 The training consisted of processing ~192,000 games, using the LoRA (Low-Rank Adaptation) technique to reduce computational costs while maintaining stability on the 7-billion parameter architecture.
 
 * **Training Type:** SFT (Supervised Fine-Tuning)
